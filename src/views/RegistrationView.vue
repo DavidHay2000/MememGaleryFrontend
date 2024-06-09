@@ -16,7 +16,7 @@
             </div>
             
             <div class="col-12">
-                <button :disabled="dis1"  type="submit" class="btn btn-primary" >Sign in</button>
+                <button :disabled="dis1"  type="submit" class="btn btn-primary" >Registration</button>
             </div>
         </form>
         <div>
@@ -30,12 +30,16 @@
 
     import { ref } from 'vue';
     import axios from 'axios';
+    import { useUserStore } from '../store/store';
+    import { storeToRefs } from 'pinia';
 
     const name = ref("");
     const email = ref("");
     const password = ref("");
     const error = ref("");
     const dis1 = ref(false);
+
+    const UserData = storeToRefs(useUserStore());
 
     const check = () => {
         
@@ -53,26 +57,27 @@
     }
 
     const onsubmit = async () => {
-     try {
-        const response = await axios.post(
-        "http://127.0.0.1:8000/api/register",
-        {
-            username: name.value,
-            email: email.value,
-            password: password.value,
-        },
-        {
-            headers: {
-            "Content-Type": "application/json",
+        try {
+            const response = await axios.post(
+            "http://127.0.0.1:8000/api/register",
+            {
+                username: name.value,
+                email: email.value,
+                password: password.value,
             },
-        }
-        );
+            {
+                headers: {
+                "Content-Type": "application/json",
+                },
+            }
+            );
 
-        console.log(response.data);
-    } catch (error) {
-        console.error("Error:", error.response.data);
-    }
-};
+            UserData.UserId.value = response.data.id;
+            console.log(UserData.UserId.value);
+        } catch (error) {
+            console.error("Error:", error.response.data);
+        }
+    };
 
 
 

@@ -1,32 +1,91 @@
 <template>
     <div class="container">
-        <form class="row g-3">
+        <form class="row g-3" @submit.prevent="onsubmit">
+            
             <div class="col-md-12">
                 <label for="inputEmail4" class="form-label">Email</label>
-                <input v-model="email" required type="email" class="form-control" id="email">
+                <input v-model="email" required type="email" class="form-control" id="inputEmail4">
             </div>
-            
-            
             <div class="col-md-12">
                 <label for="inputPassword4" class="form-label">Password</label>
-                <input v-model="password" required type="password" class="form-control" id="inputPassword4">
+                <input @keyup="check" v-model="password" required type="password" class="form-control" id="inputPassword4">
             </div>
             
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button :disabled="dis1"  type="submit" class="btn btn-primary" >Login</button>
             </div>
         </form>
+        <div>
+            {{ error }}
+        </div>
     </div>
 
 </template>
 
-<script>
-    import { ref } from 'vue';
+<script setup>
 
+    import { ref } from 'vue';
+    import axios from 'axios';
+    import { useUserStore } from '../store/store.js';
+    import { storeToRefs } from 'pinia';
+
+    
     const email = ref("");
     const password = ref("");
+    const error = ref("");
+    const dis1 = ref(false);
 
+    const UserData = storeToRefs(useUserStore());
+
+    const check = () => {
+        
+        if (password.value.length < 6) {
+            
+            error.value ="A jelszonak 6 karakter hosszunak kell lennie"
+            dis1.value = true;
+        } 
+        else {
+            error.value =""
+            dis1.value = false;
+        }
+        
+        
+    }
+
+    const onsubmit = async () => {
+        console.log("ok");
+        try {
+            const response = await axios.post(
+            "http://127.0.0.1:8000/api/login",
+            {
+                email: email.value,
+                password: password.value,
+            },
+            {
+                headers: {
+                "Content-Type": "application/json",
+                },
+            }
+            );
+            console.log(response.data);
+            UserData.UserId.value = response.data;
+            console.log(UserData.UserId.value);
+
+            
+        } catch (error) {
+            console.log("error");
+        }
+            
+            
+        
+            
+            
+            
+        
+    };
+
+
+
+    
 
 </script>
-
-<style></style>
