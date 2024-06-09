@@ -53,8 +53,7 @@
     }
 
     const onsubmit = async () => {
-        console.log("ok");
-        try {
+        
             const response = await axios.post(
             "http://127.0.0.1:8000/api/login",
             {
@@ -66,21 +65,18 @@
                 "Content-Type": "application/json",
                 },
             }
-            );
-            console.log(response.data);
-            UserData.UserId.value = response.data;
-            console.log(UserData.UserId.value);
-
-            
-        } catch (error) {
-            console.log("error");
-        }
-            
-            
-        
-            
-            
-            
+            )
+            .then(response => {
+                UserData.UserId.value = response.data;
+                console.log(UserData.UserId.value);
+                console.log("nc");
+                router.push({ name: 'GalleriesView' });
+                return response.data;
+            })
+            .catch(err => {
+                error.value = "Wrong email or password!";
+                console.log(error.value);
+            });
         
     };
 
