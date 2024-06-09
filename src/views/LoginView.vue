@@ -28,12 +28,14 @@
     import axios from 'axios';
     import { useUserStore } from '../store/store.js';
     import { storeToRefs } from 'pinia';
+    import { useRouter } from 'vue-router';
 
     
     const email = ref("");
     const password = ref("");
     const error = ref("");
     const dis1 = ref(false);
+    const router = useRouter();
 
     const UserData = storeToRefs(useUserStore());
 
@@ -67,16 +69,22 @@
             }
             )
             .then(response => {
-                UserData.UserId.value = response.data;
-                console.log(UserData.UserId.value);
-                console.log("nc");
-                router.push({ name: 'GalleriesView' });
+                
                 return response.data;
             })
             .catch(err => {
-                error.value = "Wrong email or password!";
-                console.log(error.value);
+                console.log(err);
             });
+
+            if (response != 402) {
+                UserData.UserId.value = response;
+                console.log(UserData.UserId.value);
+                console.log("nc");
+                router.push({ name: 'GalleriesView' });
+            }
+            else{
+                error.value = "Wrong email or password";
+            }
         
     };
 
