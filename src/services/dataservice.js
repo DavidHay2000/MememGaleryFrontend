@@ -1,5 +1,5 @@
 import Axios from "axios";
-Axios.defaults.baseURL = "http://localhost:3000";
+Axios.defaults.baseURL = "http://127.0.0.1:8000/api";
 
 export default {
   getAllGallery() {
@@ -24,10 +24,16 @@ export default {
         return Promise.reject(err);
       });
   },
-  // saveUser(újobjektum) {
-  //   return Axios.post("/valamik", újobjektum).then(() => {});
-  // },
-  // updateUser(módosítottObjektum, id) {
-  //   return Axios.put(`/valamik/${id}`, módosítottObjektum).then(() => {});
-  // },
+  getUserData(user) {
+    return Axios.get(`/users/${user}`)
+      .then((resp) => {
+        //console.log(resp.data);
+        return resp.data;
+      })
+      .catch((err) => {
+        //console.log(err);
+        return Promise.reject(err);
+      });
+  },
+  
 };
