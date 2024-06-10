@@ -10,10 +10,6 @@ export const useUserStore = defineStore('UserData', {
     // could also be defined as
     // state: () => ({ count: 0 })
     actions: {
-      save(id){
-        console.log(id);
-        this.UserId = id;
-        console.log("saved");
-      }
+      
     },
   })
